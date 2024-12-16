@@ -1,0 +1,9 @@
+{
+  "states": {
+    "Gujarat": ["Ahmedabad", "Surat", "Vadodara"],
+    "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
+    "Karnataka": ["Bangalore", "Mysore", "Mangalore"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+    "Delhi": ["New Delhi"]
+  }
+}

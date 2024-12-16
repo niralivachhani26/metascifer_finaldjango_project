@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Arts{% endblock %}
+
+{% block content %}
+
+{% load static %}
+<!-- top area start -->
+    <div class="breadcrumb-section2" style="background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28)), url(../static/images/breadcrumb-image2.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex">
+                    <div class="top-content style-2">
+                        <ul>
+                            <li>
+                                <a href="index.html">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.125 5.99955L5.602 1.52205C5.822 1.30255 6.178 1.30255 6.3975 1.52205L10.875 5.99955M2.25 4.87455V9.93705C2.25 10.2475 2.502 10.4995 2.8125 10.4995H4.875V8.06205C4.875 7.75155 5.127 7.49955 5.4375 7.49955H6.5625C6.873 7.49955 7.125 7.75155 7.125 8.06205V10.4995H9.1875C9.498 10.4995 9.75 10.2475 9.75 9.93705V4.87455M4.125 10.4995H8.25" stroke="white" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li>Art Catalog</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-content">
+                        {% if user %}
+                        <h1>{{ user.name }}</h1>
+                        <p>{{ user.description }}</p>
+                        {% elif category %}
+                        <h1>{{ category.name }}</h1>
+                        <p>An art catalog is a curated assembly of artworks gathered by an individual, institution, or
+                            group, often reflecting the collector's interests, tastes, or a specific theme.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- top area end -->
+<!-- contact details start -->
+    <div class="auction-card-sidebar-section pt-120 mb-120">
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-xl-12">
+                    <div class="row">
+                        <div class="col-lg-12 mb-30">
+                            <div class="auction-card-top-area">
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-grid-product-wrap">
+                        <div class="row gy-4">
+                            {% if arts %}
+                            {% for art in arts %}
+                            <div class="col-lg-4 col-md-6 item wow animate fadeInDown" data-wow-delay="200ms" data-wow-duration="1500ms" style="visibility: visible; animation-duration: 1500ms; animation-delay: 200ms;">
+                                <div class="auction-card">
+                                    <div class="auction-card-img-wrap">
+                                        <a href="{% url 'art_detail' art.id %}" class="card-img">
+                                            {% if art.art_image %}
+                                            <img src="{{ art.art_image.url }}" alt="">
+                                            {% else %}
+                                            <img src="{% static 'images/download.png' %}" alt="">
+                                            {% endif %}
+                                        </a>
+                                        {% if user.is_authenticated %}
+                                        {% if request.user.usertype != 'artist' %}
+                                        {% if art.id in wishlists %}
+                                            <span class="wishlist" style="pointer-events: none;">
+                                                <svg width="16" height="15" viewBox="0 0 16 15" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M8.00013 3.32629L7.32792 2.63535C5.75006 1.01348 2.85685 1.57317 1.81244 3.61222C1.32211 4.57128 1.21149 5.95597 2.10683 7.72315C2.96935 9.42471 4.76378 11.4628 8.00013 13.6828C11.2365 11.4628 13.03 9.42471 13.8934 7.72315C14.7888 5.95503 14.6791 4.57128 14.1878 3.61222C13.1434 1.57317 10.2502 1.01254 8.67234 2.63441L8.00013 3.32629ZM8.00013 14.8125C-6.375 5.31378 3.57406 -2.09995 7.83512 1.8216C7.89138 1.87317 7.94669 1.9266 8.00013 1.98192C8.05303 1.92665 8.10807 1.87349 8.16513 1.82254C12.4253 -2.10182 22.3753 5.31284 8.00013 14.8125Z" style="fill:red;"></path>
+                                                </svg>
+                                            </span>
+                                        {% else %}
+                                            <a href="{% url 'add_wishlist' art.id %}" class="wishlist">
+                                                <svg width="16" height="15" viewBox="0 0 16 15" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M8.00013 3.32629L7.32792 2.63535C5.75006 1.01348 2.85685 1.57317 1.81244 3.61222C1.32211 4.57128 1.21149 5.95597 2.10683 7.72315C2.96935 9.42471 4.76378 11.4628 8.00013 13.6828C11.2365 11.4628 13.03 9.42471 13.8934 7.72315C14.7888 5.95503 14.6791 4.57128 14.1878 3.61222C13.1434 1.57317 10.2502 1.01254 8.67234 2.63441L8.00013 3.32629ZM8.00013 14.8125C-6.375 5.31378 3.57406 -2.09995 7.83512 1.8216C7.89138 1.87317 7.94669 1.9266 8.00013 1.98192C8.05303 1.92665 8.10807 1.87349 8.16513 1.82254C12.4253 -2.10182 22.3753 5.31284 8.00013 14.8125Z"></path>
+                                                </svg>
+                                            </a>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+                                        <div class="countdown-timer">
+                                            <ul class="timer" data-future-date="{{ art.auction_date_time.isoformat }}">
+                                                <li class="times" data-days="00"><span class="days">0</span> <span>D</span> <span>Days</span></li>
+                                                <li class="colon">
+                                                    :
+                                                </li>
+                                                <li class="times" data-hours="00"><span class="hours">0</span> <span>H</span> <span>Hours</span></li>
+                                                <li class="colon">
+                                                    :
+                                                </li>
+                                                <li class="times" data-minutes="00"><span class="minutes">0</span> <span>M</span> <span>Minutes</span></li>
+                                                <li class="colon">
+                                                    :
+                                                </li>
+                                                <li class="times" data-seconds="00"><span class="seconds">0</span> <span>Sec</span> <span>Seconds</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="auction-card-content">
+                                        <h6><a href="{% url 'art_detail' art.id %}">{{ art.title }}</a></h6>
+                                        <ul>
+                                            <li><span>Artist : </span>{{ art.user.name }}</li>
+                                            <li><span>Current Bidding : </span>${{ art.latest_bid_amount|default:"No bids yet" }}</li>
+                                        </ul>
+                                        <a href="{% url 'art_detail' art.id %}" class="bid-btn btn-hover">
+                                            <span>Bidding Start</span>
+                                            <strong></strong>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="col-lg-12">No Arts Found!!</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- contact details end -->
+<script>
+        // Initialize countdowns for all timers
+        document.querySelectorAll('.timer').forEach(timer => {
+            const futureDate = new Date(timer.getAttribute('data-future-date'));
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = futureDate - now;
+
+                if (diff > 0) {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    timer.querySelector('.days').textContent = days;
+                    timer.querySelector('.hours').textContent = hours;
+                    timer.querySelector('.minutes').textContent = minutes;
+                    timer.querySelector('.seconds').textContent = seconds;
+                } else {
+                    timer.textContent = "Time's up!";
+                }
+            }
+
+            updateTimer(); // Run immediately
+            setInterval(updateTimer, 1000); // Update every second
+        });
+    </script>
+{% endblock %}

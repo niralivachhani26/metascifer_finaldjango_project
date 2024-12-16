@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block title %}Art Detail{% endblock %}
+
+{% block content %}
+
+{% load static %}
+<!-- top area start -->
+    <div class="top-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 d-flex mb-120">
+                    <div class="top-content style-3">
+                        <ul>
+                            <li>
+                                <a href="index.html">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.125 5.99955L5.602 1.52205C5.822 1.30255 6.178 1.30255 6.3975 1.52205L10.875 5.99955M2.25 4.87455V9.93705C2.25 10.2475 2.502 10.4995 2.8125 10.4995H4.875V8.06205C4.875 7.75155 5.127 7.49955 5.4375 7.49955H6.5625C6.873 7.49955 7.125 7.75155 7.125 8.06205V10.4995H9.1875C9.498 10.4995 9.75 10.2475 9.75 9.93705V4.87455M4.125 10.4995H8.25" stroke="white" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li><a href="auction-grid.html">Art Catalog</a></li>
+                            <li>Art Details</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- top area end -->
+<!-- contact details start -->
+<div class="auction-details-section mb-120">
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-lg-7">
+                    <div class="auction-details-img">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <div class="tab-pane fade show active" id="v-pills-img1" role="tabpanel" aria-labelledby="v-pills-img1-tab">
+                                <div class="auction-details-tab-img">
+                                    <div class="swiper auction-details-tab-swiper swiper-fade swiper-initialized swiper-horizontal swiper-watch-progress swiper-backface-hidden">
+                                        <div class="swiper-wrapper" id="swiper-wrapper-965cee22782b5e1b" aria-live="polite">
+                                            <div class="swiper-slide swiper-slide-visible swiper-slide-fully-visible swiper-slide-active" role="group" aria-label="1 / 3" data-swiper-slide-index="0" style="width: 573px; opacity: 1; transform: translate3d(0px, 0px, 0px);">
+                                                <div class="tab-image">
+                                                    {% if art.art_image %}
+                                                    <img src="{{ art.art_image.url }}" alt="">
+                                                    {% else %}
+                                                    <img src="{% static 'images/download.png' %}" alt="">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 wow animate fadeInRight" data-wow-delay="200ms" data-wow-duration="1500ms" style="visibility: visible; animation-duration: 1500ms; animation-delay: 200ms;">
+                    <div class="auction-details-content">
+
+                        <h3>{{ art.title }}</h3>
+                        <ul class="artist-info">
+                            <li><span>Artist :</span> {{ art.user.name }}</li>
+                            <li><span>Current Bid :</span> ${{ art.auction_min_price}}</li>
+                        </ul>
+                        <div class="quantity-area">
+                            <form method="post" action="{% url 'place_bid' %}">
+                                {% csrf_token %}
+                                <h6>Bidding Start</h6>
+                                <input type="hidden" name="artid" value="{{ art.id }}"/>
+                                <div class="quantity-counter-and-btn-area">
+                                    <div class="quantity-counter">
+                                        {% if latest_bid and request.user.id != latest_bid.user.id %}
+                                        <input name="quantity" type="number" class="quantity__input" value="{{ latest_bid.bid_price|add:1 }}" min="{{ latest_bid.bid_price|add:1 }}">
+                                        {% elif latest_bid and request.user.id == latest_bid.user.id %}
+                                        <input name="quantity" type="number" class="quantity__input" value="{{ latest_bid.bid_price }}" min="{{ latest_bid.bid_price }}" readonly>
+                                        {% else %}
+                                        <input name="quantity" type="number" class="quantity__input" value="{{ art.auction_min_price|add:1 }}" min="{{ art.auction_min_price|add:1 }}">
+                                        {% endif %}
+                                    </div>
+                                    {% if request.user.id != latest_bid.user.id%}
+                                    <button type="submit" class="primary-btn1 btn-hover">
+                                        <span>Place Bid</span>
+                                        <strong></strong>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </div>
+                        {% if request.user.usertype != 'artist' %}
+                         {% if art.id in wishlists %}
+                        <div class="whishlist-area" style="pointer-events: none;">
+                            <a href="#">
+                                <span>
+                                    <svg width="11" height="11" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_168_378)">
+                                            <path d="M16.528 2.20919C16.0674 1.71411 15.5099 1.31906 14.8902 1.04859C14.2704 0.778112 13.6017 0.637996 12.9255 0.636946C12.2487 0.637725 11.5794 0.777639 10.959 1.048C10.3386 1.31835 9.78042 1.71338 9.31911 2.20854L9.00132 2.54436L8.68352 2.20854C6.83326 0.217151 3.71893 0.102789 1.72758 1.95306C1.63932 2.03507 1.5541 2.12029 1.47209 2.20854C-0.490696 4.32565 -0.490696 7.59753 1.47209 9.71463L8.5343 17.1622C8.77862 17.4201 9.18579 17.4312 9.44373 17.1868C9.45217 17.1788 9.46039 17.1706 9.46838 17.1622L16.528 9.71463C18.4907 7.59776 18.4907 4.32606 16.528 2.20919ZM15.5971 8.82879H15.5965L9.00132 15.7849L2.40553 8.82879C0.90608 7.21113 0.90608 4.7114 2.40553 3.09374C3.76722 1.61789 6.06755 1.52535 7.5434 2.88703C7.61505 2.95314 7.68401 3.0221 7.75012 3.09374L8.5343 3.92104C8.79272 4.17781 9.20995 4.17781 9.46838 3.92104L10.2526 3.09438C11.6142 1.61853 13.9146 1.52599 15.3904 2.88767C15.4621 2.95378 15.531 3.02274 15.5971 3.09438C17.1096 4.71461 17.1207 7.2189 15.5971 8.82879Z"  style="fill:red;"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                Added to wishlist
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="whishlist-area">
+                            <a href="{% url 'add_wishlist' art.id %}">
+                                <span>
+                                    <svg width="11" height="11" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_168_378)">
+                                            <path d="M16.528 2.20919C16.0674 1.71411 15.5099 1.31906 14.8902 1.04859C14.2704 0.778112 13.6017 0.637996 12.9255 0.636946C12.2487 0.637725 11.5794 0.777639 10.959 1.048C10.3386 1.31835 9.78042 1.71338 9.31911 2.20854L9.00132 2.54436L8.68352 2.20854C6.83326 0.217151 3.71893 0.102789 1.72758 1.95306C1.63932 2.03507 1.5541 2.12029 1.47209 2.20854C-0.490696 4.32565 -0.490696 7.59753 1.47209 9.71463L8.5343 17.1622C8.77862 17.4201 9.18579 17.4312 9.44373 17.1868C9.45217 17.1788 9.46039 17.1706 9.46838 17.1622L16.528 9.71463C18.4907 7.59776 18.4907 4.32606 16.528 2.20919ZM15.5971 8.82879H15.5965L9.00132 15.7849L2.40553 8.82879C0.90608 7.21113 0.90608 4.7114 2.40553 3.09374C3.76722 1.61789 6.06755 1.52535 7.5434 2.88703C7.61505 2.95314 7.68401 3.0221 7.75012 3.09374L8.5343 3.92104C8.79272 4.17781 9.20995 4.17781 9.46838 3.92104L10.2526 3.09438C11.6142 1.61853 13.9146 1.52599 15.3904 2.88767C15.4621 2.95378 15.531 3.02274 15.5971 3.09438C17.1096 4.71461 17.1207 7.2189 15.5971 8.82879Z"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                                Add to wishlist
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        <div class="countdown-area">
+                            <h6>Auction will Be End</h6>
+                            <div class="countdown-timer">
+                                {% if future_date %}
+                                <ul data-countdown="{{ future_date }}">
+                                    <li class="times" data-days="00"><span id="days">0</span> <span>D</span> <span>Days</span></li>
+                                    <li class="colon">
+                                        :
+                                    </li>
+                                    <li class="times" data-hours="00"><span id="hours">0</span> <span>H</span> <span>Hours</span></li>
+                                    <li class="colon">
+                                        :
+                                    </li>
+                                    <li class="times" data-minutes="00"><span id="minutes">0</span> <span>M</span> <span>Minutes</span></li>
+                                    <li class="colon">
+                                        :
+                                    </li>
+                                    <li class="times" data-seconds="00"><span id="seconds">0</span> <span>Sec</span> <span>Seconds</span></li>
+                                </ul>
+                                <script>
+                                    const futureDate = new Date("{{ future_date.isoformat }}");
+
+                                    function updateCountdown() {
+                                        const currentDate = new Date();
+                                        const timeDifference = futureDate - currentDate;
+
+                                        if (timeDifference > 0) {
+                                            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                                            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                                            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                                            document.getElementById("days").textContent = days;
+                                            document.getElementById("hours").textContent = hours;
+                                            document.getElementById("minutes").textContent = minutes;
+                                            document.getElementById("seconds").textContent = seconds;
+                                        } else {
+                                            document.querySelector(".timer").textContent = "Time's up!";
+                                            clearInterval(timerInterval);
+                                        }
+                                    }
+
+                                    const timerInterval = setInterval(updateCountdown, 1000);
+                                    updateCountdown();
+                                </script>
+                                {% else %}
+                                <p>No countdown available for this art.</p>
+                                {% endif %}
+                            </div>
+                            <span class="ending-time">Ending : <strong>{{ art.auction_date_time|date:'F d ' }}at {{ art.auction_date_time|time:'h:i a' }} </strong></span>
+                        </div>
+                        <div class="payment-method">
+                            <ul class="payment-list">
+                                <li>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.375 9.5625L7.875 14.0625L14.625 3.9375" stroke="#1D972B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Shipping : Less than one week
+                                </li>
+                                <li>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.375 9.5625L7.875 14.0625L14.625 3.9375" stroke="#1D972B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Secure delivery : $162
+                                </li>
+                                <li>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.375 9.5625L7.875 14.0625L14.625 3.9375" stroke="#1D972B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Free returns within Two Weekes
+                                </li>
+                                <li>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.375 9.5625L7.875 14.0625L14.625 3.9375" stroke="#1D972B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Authenticity Certificate
+                                </li>
+                                <li>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3.375 9.5625L7.875 14.0625L14.625 3.9375" stroke="#1D972B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Secured Payment Gateways
+                                </li>
+                            </ul>
+                            <ul class="payment-card">
+                                <li>
+                                    <img src="assets/img/inner-page/payment-image.svg" alt="">
+                                </li>
+                                <li>
+                                    <img src="assets/img/inner-page/payment-image2.svg" alt="">
+                                </li>
+                                <li>
+                                    <img src="assets/img/inner-page/payment-image3.svg" alt="">
+                                </li>
+                                <li>
+                                    <img src="assets/img/inner-page/payment-image4.svg" alt="">
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="ask-question">Have any question? <a href="{% url 'contact' %}">Ask Us</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product-description mb-120">
+        <div class="container">
+            <div class="row justify-content-center gy-4">
+                <div class="col-xxl-3 col-lg-6">
+                    <div class="artist-overview">
+                        <h5>Artist Overview</h5>
+                        <ul>
+                            <li>
+                                <h6>Date of Birth</h6>
+                                <p>Born on {{ art.user.dob|date:'F d, Y' }}</p>
+                            </li>
+                            <li>
+                                <h6>Style</h6>
+                                <p>{{ art.artist_style }}</p>
+                            </li>
+                            <li>
+                                <h6>Notable work</h6>
+                                <p>{{ art.notable_work }}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xxl-5 col-lg-6">
+                    <div class="exploring-artwork">
+                        <h5>Exploring the Artwork</h5>
+                        <ul>
+                            <li>
+                                <h6>Category :</h6>
+                                <p>{{ art.category }}</p>
+                            </li>
+                            <li>
+                                <h6>Size :</h6>
+                                <p>{{ art.size }}</p>
+                            </li>
+                            <li>
+                                <h6>Framing :</h6>
+                                <p>Not Frame</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <h6>Theme :</h6>
+                                <p>{{ art.theme }}</p>
+                            </li>
+                            <li>
+                                <h6>Signature :</h6>
+                                <p>{{ art.signature }}</p>
+                            </li>
+                            <li>
+                                <h6>Authenticity : </h6>
+                                <p>{{ art.authenticity }}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-6">
+                    <div class="narrative-guidelines">
+                        <h5>Art Inner narrative &amp; guidelines</h5>
+                        <ul>
+                            <li>
+                                <h6>Inner Narrative Of This Artwork</h6>
+                                <p>{{ art.narrative }}</p>
+                            </li>
+                        </ul>
+                        <div class="guidelines">
+                            <h6>Guidelines for The Art work :</h6>
+                            <p>{{ art.guidelines }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- contact details end -->
+{% endblock %}
